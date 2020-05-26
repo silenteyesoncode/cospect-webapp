@@ -47,8 +47,9 @@ def handle_invalid_usage(error):
 def runInference(id):
 	startTime = time.time()
 
-	#TODO: Get the file from s3 bucket
 	fileName = base_path + "uploads/" + id
+
+	#TODO: Put this in a try/catch, if the file cannot be read
 	sampling_rate, audio = wavfile.read(fileName)
 	#audio, sampling_rate = audiofile.read(fileName)
 
