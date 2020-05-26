@@ -17,7 +17,17 @@ ul{
   padding:0;
 }
 
+a:link {
+  color:#ccf;
+}
 
+a:visited {
+  color:#ccf;
+}
+
+a:hover {
+  color:#aad;
+}
 
 /* Header **/
 header{
