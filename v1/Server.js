@@ -140,15 +140,14 @@ app.post('/data', function(req, res){
 		if (fieldName == "id") {
 			id = fieldValue;
 			submissionInfo["ID"] = fieldValue;
-			var params = { Bucket: bucket, Key: "info/" + id + ".json" };
-
+			
 		} else {
 			submissionInfo[fieldName] = fieldValue;
 		}
 	});
 
 	form.on('end', function (name, file) {
-
+		var params = { Bucket: bucket, Key: "info/" + id + ".json" };
 		s3bucket.getObject(params, function(err, data) {
 			if (err) {
 				console.log(err, err.stack);
