@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<!--TODO: See if headers and footer code can be combined into one page-->
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="description" content="Affordable and professional web design">
+		  <meta name="keywords" content="web design, affordable web design, professional web design">
+		<meta name="author" content="Mayank Kumar">
+		<title>CoSpect Web App</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div id="branding">
+					<a href="http://www.konect-co.com"><img id="logo" src="/pics/Logo.png" alt="Konect" align="left"></a>
+			 	</div>
+				<nav id="navbar">
+					<ul>
+						<li class="current"><a href="index.html">Home</a></li>
+						<li class="current"><a href="https://forms.gle/2cawfpZZQ8oLonSz5">Contact</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+
+		<section id="showcase">
+			<div class="showcase-content">
+				<h1 class="lead">Analyze your cough symptoms...</h1>
+				<div class="lead2">
+				<button class="btn-light" id="record-btn" onclick="window.location.href = 'audio.html'">RECORD FROM MIC</button>
+				<b>OR</b>
+				<button class="btn-dark" id="upload-btn" onclick="document.getElementById('file-input').click();">UPLOAD FROM A FILE</button>
+			</div>
+				<form action="submit" enctype="multipart/form-data" method="post" id="coughForm" class="data-record2" style="display: none;">
+						<input class="btn-dark" type="file" id="file-input" name="upload" onchange="onUpload()" accept="audio/*" >
+			 	</form>
+				<div id="showcase-box">
+					<h1><button class="btn-data" onclick = "window.location.href = 'doc.html'" >How Do We Use your Data</button></h1>
+				</div>
+			</div>
+			<footer>
+				<ul>COVID-19 CoSpect Technology</ul><ul> Copyright &copy; 2020</ul>
+			</footer>
+		</section>
+	</body>
+</html>
+
+<script>
+//This method prevents the user from re-clicking upload or record button once either is clicked
+function onUpload() {
+	document.getElementById("record-btn").disabled = true;
+	document.getElementById("upload-btn").disabled = true;
+	
+	//document.getElementById('coughForm').submit();
+
+	var postReq=new XMLHttpRequest();
+	postReq.onload=function(e) {
+		if (postReq.status != 200) {
+			console.log("com eheere");
+			location.href = 'formError.html';
+		}
+		if(this.readyState === 4) {
+			let domparser = new DOMParser();
+
+			var getResultsPage = new XMLHttpRequest();
+			getResultsPage.onload=function(response) {
+				var doc = domparser.parseFromString(response.target.responseText, "text/html");
+				//document.body.innerHTML = e.target.responseText;
+
+				var id = JSON.parse(e.target.responseText)["id"];
+				var symptom = JSON.parse(e.target.responseText)["symptom"];
+
+				doc.getElementById("cough-symptom").innerHTML = symptom;
+				doc.getElementById("id").innerHTML = id;
+				if (symptom == "High")  { doc.getElementById("risk-decision").innerHTML = "moderate"; }
+				document.body = doc.body;
+			}
+			getResultsPage.open("GET","result.html", true);
+			getResultsPage.send();
+
+
+		}
+	};
+
+	var form = document.getElementById("coughForm");
+	var fd=new FormData(form);
+
+	postReq.open("POST","submit",true);
+	postReq.send(fd);
+
+}
+</script>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="description" content="Affordable and professional web design">
+		  <meta name="keywords" content="web design, affordable web design, professional web design">
+		<meta name="author" content="Mayank Kumar">
+		<title>CoSpect Web App</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div id="branding">
+					<a href="http://www.konect-co.com"><img id="logo" src="/pics/Logo.png" alt="Konect" align="left"></a>
+			 	</div>
+				<nav id="navbar">
+					<ul>
+						<li class="current"><a href="index.html">Home</a></li>
+						<li class="current"><a href="https://forms.gle/2cawfpZZQ8oLonSz5">Contact</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+
+		<div id="showcase">
+		<div id="controls">
+			<button id="recordButton">Record</button>
+			<button id="pauseButton" disabled>Pause</button>
+			<button id="stopButton" disabled>Stop</button>
+		</div>
+		<div id="formats">Format: start recording to see sample rate</div>
+			<div id="formats-b">
+				<strong>Recordings:</strong>
+			</div>
+
+			<ol id="recordingsList"></ol>
+		</div>
+		<footer>
+			<ul>COVID-19 CoSpect Technology</ul><ul> Copyright &copy; 2020</ul>
+		</footer>
+		 
+		<script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+		<script src="app.js"></script>
+	</body>
+</html>

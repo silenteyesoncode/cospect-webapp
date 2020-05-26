@@ -1,0 +1,16 @@
+In results.html rendering make ID variable not changeable by user
+Handle errors properly
+Check if file is wav file
+Handle scenario where no file is submitted
+Get working model
+Add recording functionality
+Limit cough sound duration to 10 seconds/10 MB
+Make sure database is not getting too large
+Add loading symbol
+Check if uploaded file really is a cough sound
+For visitorLog and submissionLog don't store entire array
+Use Google Analytics instead of custom Node.js tools
+Automatically report problem in getting output from FLASK API
+Fix design for mobile - Mayank
+Finish ty.html
+Look into encryption
