@@ -52,11 +52,9 @@ def runInference(id):
 	sampling_rate, audio = wavfile.read(fileName)
 	#audio, sampling_rate = audiofile.read(fileName)
 
-	print("AUDIO SHAPE", audio.shape)
 	if len(audio.shape) == 2:
 		audio = np.reshape(np.mean(audio, axis=1), (-1))
 	#TODO: if len of audio.shape is more than 3, something is wrong. Throw an error
-	print("AUDIO SHAPE", audio.shape)
 	if len(audio.shape) != 1:
 		if audio.shape[1] != 1:
 			raise InvalidUsage("Audio has improper number of channels")

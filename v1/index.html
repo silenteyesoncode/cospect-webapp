@@ -74,6 +74,7 @@ function onUpload() {
 
 				doc.getElementById("cough-symptom").innerHTML = symptom;
 				doc.getElementById("id").innerHTML = id;
+				doc.getElementById("submissionID").value = id;
 				if (symptom == "High")  { doc.getElementById("risk-decision").innerHTML = "moderate"; }
 				document.body = doc.body;
 			}

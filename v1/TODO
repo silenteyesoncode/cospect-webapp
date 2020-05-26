@@ -1,10 +1,10 @@
 In results.html rendering make ID variable not changeable by user
-Handle errors properly
+MAKE SURE ALL ERRORS ARE HANDLED CORRECTLY
 Check if file is wav file
 Handle scenario where no file is submitted
 Get working model
 Add recording functionality
-Limit cough sound duration to 10 seconds/10 MB
+Delete submissionInfoLog
 Make sure database is not getting too large
 Add loading symbol
 Check if uploaded file really is a cough sound
@@ -14,3 +14,4 @@ Automatically report problem in getting output from FLASK API
 Fix design for mobile - Mayank
 Finish ty.html
 Look into encryption
+Efficiency of sending data to S3 then processing it? Why not first process it then send it to S3?

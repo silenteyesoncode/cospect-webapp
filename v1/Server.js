@@ -11,8 +11,6 @@ var app = express();
 
 var unq_visitors = 0;
 var submissions = 0;
-var visitorInfoLog = { visitors:[] };
-var submissionInfoLog = { submissions:[] }
 var unq_IPs = [];
 
 function getTimestamp () {
@@ -30,33 +28,32 @@ function getTimestamp () {
 }
 
 let rawData = fs.readFileSync('keys.json');
-let keys = JSON.parse(rawdata);
+let keys = JSON.parse(rawData);
 
 let accessKeyVal = keys["accessKeyId"];
 let secretAccessKeyVal = keys["secretAccessKey"];
 let bucket = keys["Bucket"];
 
-function uploadToS3(file) {
-  let s3bucket = new AWS.S3({
-    accessKeyId: accessKeyVal,
-    secretAccessKey: secretAccessKeyVal,
-    Bucket: bucket
-  });
-  s3bucket.createBucket(function () {
-      var params = {
-        Bucket: BUCKET_NAME,
-        Key: file.name,
-        Body: file.data
-      };
-      s3bucket.upload(params, function (err, data) {
-        if (err) {
-          console.log('error in callback');
-          console.log(err);
-        }
-        console.log('success');
-        console.log(data);
-      });
-  });
+let s3bucket = new AWS.S3({
+	accessKeyId: accessKeyVal,
+	secretAccessKey: secretAccessKeyVal,
+	Bucket: bucket
+});
+
+function uploadToS3(file_name, file_data) {
+	s3bucket.createBucket(function () {
+		var params = {
+			Bucket: bucket,
+			Key: file_name,
+			Body: file_data
+		};
+		s3bucket.upload(params, function (err, data) {
+			if (err) {
+				console.log('error in callback');
+				console.log(err);
+			}
+		});
+	});
 }
 
 //================Express Functions================
@@ -67,13 +64,6 @@ app.get('/index.html', function (req, res){
 
 app.get('/', function (req, res){
 	let ip = req.ip;
-	
-	var date = new Date();
-	var visitorInfo = { "IP Address":ip, "Time":getTimestamp() };
-	visitorInfoLog.visitors.push(visitorInfo);
-
-	var json = JSON.stringify(visitorInfoLog);
-	fs.writeFile('visitorLog.json', json, 'utf8', (err) => {});
 
 	if (!unq_IPs.includes(ip)) {
 		unq_visitors++;
@@ -129,10 +119,13 @@ app.get('/style.css', function (req, res){
 });
 
 app.post('/data', function(req, res){
-	var submissionInfo = {};
 	var id;
 
+	var submissionInfo = {};
+
 	var form = new formidable.IncomingForm();
+
+	form.parse(req);
 
 	form.on('error', (err) => {
 		console.log("Form error");
@@ -140,25 +133,49 @@ app.post('/data', function(req, res){
 		res.writeHeader(400, {"Content-Type": "text/html"});
 		res.write("<!DOCTYPE html>Something went wrong when processing your form submission. Please check the following and try again.");
 		res.end();
+		return;
 	});
+
 	form.on('field', (fieldName, fieldValue) => {
 		if (fieldName == "id") {
 			id = fieldValue;
+			submissionInfo["ID"] = fieldValue;
+			var params = { Bucket: bucket, Key: "info/" + id + ".json" };
+
+		} else {
+			submissionInfo[fieldName] = fieldValue;
 		}
-		submissionInfo[fieldName] = fieldValue;
 	});
 
 	form.on('end', function (name, file) {
-		var json = JSON.stringify(submissionInfo);
-		fs.writeFile('uploads/' + id + '.json', json, 'utf8', (err) => {});
-		fs.readFile("./ty.html", function (err, content) {
-			if (err) { res.end(); return; }
-			res.writeHeader(200, {"Content-Type": "text/html"});
-			res.write(content);
-			res.end();
+
+		s3bucket.getObject(params, function(err, data) {
+			if (err) {
+				console.log(err, err.stack);
+			} else {
+				submissionCurr = JSON.parse(data.Body.toString());
+
+				//check first if "id" and "Time" in submissionCurr
+				//assert that fieldValue == submissionCurr["ID"]
+				
+				submissionInfo["Time"] = submissionCurr["Time"];
+
+				//TODO: Should ty.html be sent now or later?
+				fs.readFile("./ty.html", function (err, content) {
+					if (err) { res.end(); return; }
+					res.writeHeader(200, {"Content-Type": "text/html"});
+					res.write(content);
+					res.end();
+				});
+
+				var json = JSON.stringify(submissionInfo);
+				uploadToS3("info/" + id + ".json", json);
+				//fs.writeFile('info/' + id + '.json', json, 'utf8', (err) => {});
+
+			}
 		});
 	});
-
+	//end response if not ended already -- res.end()
 });
 
 //We aren't returning the rendered HTML page here. Instead we are returning a JSON containing the ID and symptom
@@ -200,17 +217,13 @@ app.post('/submit', function (req, res){
 	});
 
 	form.on('end', function (name, file) {
-		//Copy file over to s3 bucket and delete the original
-		/*
-		aws s3 cp file_path s3://konect-cospect/uploads
-		rm file_path
-		*/
-		
+		//Send file over to s3 bucket
+		fs.readFile(file_path, (err, file_data) => {		
+			if (err) { console.log(err); }			
+			uploadToS3("uploads/" + id, file_data);
+		});
 
-		submissionInfoLog.submissions.push(submissionInfo);
-
-		var json = JSON.stringify(submissionInfoLog);
-		fs.writeFile('submissionLog.json', json, 'utf8', (err) => {});
+		uploadToS3("info/" + id + ".json", JSON.stringify(submissionInfo));
 
 		http.get("http://localhost:5000/analyze/" + id, function(result){
 			var data = "";
@@ -219,7 +232,6 @@ app.post('/submit', function (req, res){
 			});
 
 			result.on('end', function() {
-				console.log(data);		
 				data = JSON.parse(data);
 
 				//TODO: Automatically report and save this to a list of bugs
@@ -234,18 +246,8 @@ app.post('/submit', function (req, res){
 				res.write(json_result);
 				res.end();
 
-				/*html +=
-	"<script id=\"render-script\">\n\
-	function renderResults() {\n\
-		var symptom = \"" + symptom + "\";\n\
-		document.getElementById(\"cough-symptom\").innerHTML = symptom;\n\
-		document.getElementById(\"id\").innerHTML = \"" + id + "\";\n\
-		//if (symptom == \"High\")  { document.getElementById(\"risk-decision\").innerHTML = \"moderate\"; }\n\
-	}\n\
-	renderResults();\n\
-	</script>";*/
-
-
+				//Deleting the audio locally, as it has been sent to S3 already
+				fs.unlink(file_path, (err)=>{ console.log(err); });
 			});
 		});
 	});
