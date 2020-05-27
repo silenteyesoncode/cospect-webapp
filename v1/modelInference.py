@@ -1,6 +1,7 @@
 import sys
 import time
 import os
+import magic #determining type of file
 
 from flask import Flask, jsonify
 app = Flask(__name__)
@@ -39,19 +40,29 @@ class InvalidUsage(Exception):
 
 @app.errorhandler(InvalidUsage)
 def handle_invalid_usage(error):
-    response = jsonify(error.to_dict())
-    response.status_code = error.status_code
-    return response
+	response = jsonify(error.to_dict())
+	print ("STATUS CODE", error.status_code)
+	response.status_code = error.status_code
+	return response
 
 @app.route("/analyze/<id>")
 def runInference(id):
 	startTime = time.time()
 
 	fileName = base_path + "uploads/" + id
+	if (not os.path.isfile(fileName)):
+		raise InvalidUsage("This is not a file")
+
+	if (magic.from_file(fileName, mime=True).split("/")[0] != "audio"):
+		raise InvalidUsage("This is not an audio file")
 
 	#TODO: Put this in a try/catch, if the file cannot be read
-	sampling_rate, audio = wavfile.read(fileName)
-	#audio, sampling_rate = audiofile.read(fileName)
+	try:	
+		sampling_rate, audio = wavfile.read(fileName)
+		#audio, sampling_rate = audiofile.read(fileName)
+
+	except:
+		raise InvalidUsage("Can't read the audio")
 
 	if len(audio.shape) == 2:
 		audio = np.reshape(np.mean(audio, axis=1), (-1))

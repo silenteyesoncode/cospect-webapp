@@ -2,15 +2,13 @@
 function onUpload() {
 	document.getElementById("record-btn").disabled = true;
 	document.getElementById("upload-btn").disabled = true;
-	
-	//document.getElementById('coughForm').submit();
+
+	document.getElementById("error-msg").style.display = "none";
+	document.getElementById("loading").style.display = "";
 
 	var postReq=new XMLHttpRequest();
 	postReq.onload=function(e) {
-		if (postReq.status != 200) {
-			location.href = 'formError.html';
-		}
-		if(this.readyState === 4) {
+		if(postReq.status == 200 && this.readyState === 4) {
 			let domparser = new DOMParser();
 
 			var getResultsPage = new XMLHttpRequest();
@@ -29,8 +27,13 @@ function onUpload() {
 			}
 			getResultsPage.open("GET","result.html", true);
 			getResultsPage.send();
+		} else {
+			document.getElementById("record-btn").disabled = false;
+			document.getElementById("upload-btn").disabled = false;
 
-
+			document.getElementById("error-msg").style.display = "";
+			document.getElementById("loading").style.display = "none";
+			//location.href = 'formError.html';
 		}
 	};
 

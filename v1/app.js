@@ -47,6 +47,10 @@ function startRecording() {
 		console.log("Recording started");
 
 	}).catch(function(err) {
+		document.getElementById("error-msg").style.display = "";
+		console.log("Err in recording ", err);
+		recordButton.style.display = "";
+
     	recordButton.disabled = false;
     	stopButton.disabled = true;
     	pauseButton.disabled = true
@@ -66,6 +70,8 @@ function pauseRecording(){
 
 function stopRecording() {
 	console.log("stopButton clicked");
+
+	document.getElementById("loading").style.display = "";
 
 	stopButton.disabled = true;
 	recordButton.disabled = false;
@@ -120,52 +126,4 @@ function submitPost(blob) {
 
 	xhr.open("POST","submit",true);
 	xhr.send(fd);
-
-	/*var url = URL.createObjectURL(blob);
-	var au = document.createElement('audio');
-	var li = document.createElement('li');
-	var link = document.createElement('a');
-
-	//name of .wav file to use during upload and download (without extension)
-	var filename = new Date().toISOString();
-
-	//add controls to the <audio> element
-	au.controls = true;
-	au.src = url;
-
-	//save to disk link
-	link.href = url;
-	link.download = filename+".wav"; //download forces the browser to donwload the file using the  filename
-	link.innerHTML = "Save to disk";
-
-	//add the new audio element to li
-	li.appendChild(au);
-	
-	//add the filename to the li
-	li.appendChild(document.createTextNode(filename+".wav "))
-
-	//add the save to disk link to li
-	li.appendChild(link);
-	
-	//upload link
-	var upload = document.createElement('a');
-	upload.href="#";
-	upload.innerHTML = "Upload";
-	upload.addEventListener("click", function(event){
-		  var xhr=new XMLHttpRequest();
-		  xhr.onload=function(e) {
-		      if(this.readyState === 4) {
-		          console.log("Server returned: ",e.target.responseText);
-		      }
-		  };
-		  var fd=new FormData();
-		  fd.append("audio_data", blob, filename);
-		  xhr.open("POST","submit",true);
-		  xhr.send(fd);
-	})
-	li.appendChild(document.createTextNode (" "))//add a space in between
-	li.appendChild(upload)//add the upload link to li
-
-	//add the li element to the ol
-	recordingsList.appendChild(li);*/
 }

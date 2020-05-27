@@ -142,7 +142,7 @@ app.post('/data', function(req, res){
 
 	form.on('error', (err) => {
 		console.log("Form error");
-
+		//TODO: Fix this error
 		res.writeHeader(400, {"Content-Type": "text/html"});
 		res.write("<!DOCTYPE html>Something went wrong when processing your form submission. Please check the following and try again.");
 		res.end();
@@ -163,6 +163,7 @@ app.post('/data', function(req, res){
 		var params = { Bucket: bucket, Key: "info/" + id + ".json" };
 		s3bucket.getObject(params, function(err, data) {
 			if (err) {
+				//TODO: Fix this error
 				console.log(err, err.stack);
 			} else {
 				submissionCurr = JSON.parse(data.Body.toString());
@@ -229,21 +230,31 @@ app.post('/submit', function (req, res){
 	});
 
 	form.on('end', function (name, file) {
-		//Send file over to s3 bucket
-		fs.readFile(file_path, (err, file_data) => {		
-			if (err) { console.log(err); }			
-			uploadToS3("uploads/" + id, file_data);
-		});
-
-		uploadToS3("info/" + id + ".json", JSON.stringify(submissionInfo));
-
+		//TODO: res and result variables are confusing
 		http.get("http://localhost:5000/analyze/" + id, function(result){
+			const { statusCode } = result;
+			//const contentType = res.headers['content-type'];
+
+			if (statusCode != 200) {
+				res.writeHeader(statusCode);
+				res.end();
+				return;
+			}
+
 			var data = "";
 			result.on('data', function(chunk) {
 				data += chunk;
 			});
 
 			result.on('end', function() {
+				//Send file over to s3 bucket
+				fs.readFile(file_path, (err, file_data) => {		
+					if (err) { console.log(err); }			
+					uploadToS3("uploads/" + id, file_data);
+				});
+
+				uploadToS3("info/" + id + ".json", JSON.stringify(submissionInfo));
+
 				data = JSON.parse(data);
 
 				//TODO: Automatically report and save this to a list of bugs

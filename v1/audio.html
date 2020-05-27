@@ -24,19 +24,23 @@
 			</div>
 		</header>
 
-		<div id="showcase">
+		<section id="showcase">
 			<div id="controls">
 				<button id="recordButton">Record</button>
 				<button id="pauseButton" disabled>Pause</button>
 				<button id="stopButton" disabled>Stop</button>
 			</div>
-			<ol id="recordingsList"></ol>
-		</div>
+			<div id="error-msg" style="display: none;">There was an error processing your request. Please make sure your device has an audio source</div>
+			<div id="loading" style="display:none;">
+				<div style="font-family:Arial;">Please wait while we process your audio file.</div>
+			<div id="loader"></div> 
+		</section>
 		<footer>
 			<ul>COVID-19 CoSpect Technology</ul><ul> Copyright &copy; 2020</ul>
 		</footer>
-		 
-		<script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
-		<script src="app.js"></script>
 	</body>
+
+	<script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+	<script src="app.js"></script>
+
 </html>

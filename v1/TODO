@@ -1,17 +1,17 @@
-In results.html rendering make ID variable not changeable by user
-MAKE SURE ALL ERRORS ARE HANDLED CORRECTLY
-Check if file is wav file
-Handle scenario where no file is submitted
-Get working model
-Add recording functionality
-Delete submissionInfoLog
-Make sure database is not getting too large
-Add loading symbol
-Check if uploaded file really is a cough sound
-For visitorLog and submissionLog don't store entire array
-Use Google Analytics instead of custom Node.js tools
-Automatically report problem in getting output from FLASK API
+Error handling and foolproof
+	In results.html rendering make ID variable not changeable by user
+	Check if file is wav file
+	Handle scenario where no file is submitted
+	Automatically report problem in getting output from FLASK API
+	Deny certain requests depending upon where they are coming from
 Fix design for mobile - Mayank
-Finish ty.html
+Add scalability
+Use Google Analytics instead of custom Node.js tools
+
+Get working model
+Check if uploaded file really is a cough sound
+	Else. Say "Hmm...That didn't sound like a cough. Please try again"
+Add timer to record button
 Look into encryption
-Deny certain requests depending upon where they are coming from
+Better design style
+	Have error message and loading overlap on top of each other, not one over the other
