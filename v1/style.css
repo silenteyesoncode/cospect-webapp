@@ -189,6 +189,13 @@ header a:hover{
 	color: #fff;
 }
 
+#controls {
+	display: flex;
+	margin: auto;
+	max-width: 28em;
+	padding-top: 40px;
+} 
+
 .btn-light, .btn-dark, .btn-data {
 	display: inline-block;
 	font-size: 18px;
