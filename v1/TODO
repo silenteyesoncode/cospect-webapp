@@ -14,4 +14,4 @@ Automatically report problem in getting output from FLASK API
 Fix design for mobile - Mayank
 Finish ty.html
 Look into encryption
-Efficiency of sending data to S3 then processing it? Why not first process it then send it to S3?
+Deny certain requests depending upon where they are coming from

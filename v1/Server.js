@@ -92,6 +92,15 @@ app.get('/app.js', function (req, res){
 	});
 });
 
+app.get('/onUpload.js', function (req, res){
+	fs.readFile("./onUpload.js", function (err, content) {
+		if (err) { res.end(); return; }
+		res.writeHeader(200, {"Content-Type": "text/javascript"});
+		res.write(content);
+		res.end();
+	});
+});
+
 app.get('/pics/Logo.png', function (req, res){
 	fs.readFile("pics/Logo.png", function (err, content) {
 		if (err) { res.end(); return; }
@@ -107,6 +116,10 @@ app.get('/result.html', function (req, res){
 
 app.get('/doc.html', function (req, res){
 	res.sendFile(__dirname + '/doc.html');
+});
+
+app.get('/ty.html', function (req, res){
+	res.sendFile(__dirname + '/ty.html');
 });
 
 app.get('/style.css', function (req, res){
