@@ -45,6 +45,10 @@ def handle_invalid_usage(error):
 	response.status_code = error.status_code
 	return response
 
+@app.route("/")
+def showRunning():
+	return "<html> This is working"
+
 @app.route("/analyze/<id>")
 def runInference(id):
 	startTime = time.time()
