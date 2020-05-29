@@ -359,12 +359,6 @@ footer{
     margin-top:20px;
   }
 
-  #data{
-    float: none;
-    padding: 5px;
-
-  }
-
   #showcase .showcase-content .lead{
     font-size: 35px;
   } 
@@ -376,14 +370,6 @@ footer{
 }
 
 @media(max-width: 470px){
-
-
-  #data{
-    float: none;
-    padding: 5px;
-    padding-bottom: 20px;
-    margin-top: 35px;
-  }
 
   #showcase .showcase-content .lead{
     font-size: 35px;
