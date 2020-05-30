@@ -232,7 +232,7 @@ app.post('/submit', function (req, res){
 
 	form.on('end', function (name, file) {
 		//TODO: res and result variables are confusing
-		http.get("http://localhost:5000/analyze/" + id, function(result){
+		http.get("http://0.0.0.0:5000/analyze/" + id, function(result){
 			const { statusCode } = result;
 			//const contentType = res.headers['content-type'];
 
