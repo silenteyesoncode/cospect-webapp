@@ -1,4 +1,4 @@
 Dockerfile
-v1/uploads
+venv
 keys.json
 *__pycache__*

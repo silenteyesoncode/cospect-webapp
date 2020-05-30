@@ -6,6 +6,7 @@ const AWS = require('aws-sdk');
 
 var express = require('express');
 var formidable = require('formidable');
+var spawn = require("child_process").spawn;
 
 var app = express();
 
@@ -276,4 +277,5 @@ app.post('/submit', function (req, res){
 	});
 });
 
+var process = spawn('python', ["./modelInference.py"]);
 app.listen(3000);
