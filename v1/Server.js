@@ -278,5 +278,5 @@ app.post('/submit', function (req, res){
 });
 
 //spawn('python', ["-m", "pip", "install", "-r", "requirements.txt"]);
-spawn('python', ["modelInference.py"]);
+spawn('python3', ["modelInference.py"]);
 app.listen(3000);
