@@ -379,6 +379,15 @@ footer{
     width: 100%;
     font-size: 20px;
   }
+	
+  #data	{
+	float: none;
+	width: 100%;
+	padding: 0px;
+  }
+  #data .data-doc{
+	  padding: 0px;
+  }
 
   button.btn-data{
     display: inline-flex;
